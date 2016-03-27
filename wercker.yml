@@ -1,0 +1,20 @@
+box: debian
+build:
+  steps:
+    - arjen/hugo-build@1.8.1:
+        version: "0.15"
+deploy:
+  steps:
+    - install-packages:
+        packages: git
+    - script:
+        name: git push to master
+        cwd: public/
+        code: |
+          git init
+          git add --all
+          git config user.email "scorpio147wbh@gmail.com"
+          git config user.name "Binghao Wang"
+          git commit -m "Generate web site"
+          result="$(git push -f https://$GH_TOKEN@github.com/$WERCKER_GIT_OWNER/$WERCKER_GIT_REPOSITORY.git master)"
+          if [[ $? -ne 0 ]]; then echo "$result"; fi
